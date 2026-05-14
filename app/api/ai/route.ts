@@ -14,7 +14,13 @@ export async function POST(req: NextRequest) {
     const message = await client.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 1024,
-      system: systemPrompt || "You are an expert real estate AI assistant helping realtors close more deals. Be specific, actionable, and concise. Use markdown formatting with **bold** for key points and bullet points where appropriate.",
+      tools: [
+        {
+          type: "web_search_20250305",
+          name: "web_search",
+        } as Parameters<typeof client.messages.create>[0]["tools"][0],
+      ],
+      system: systemPrompt || "You are an expert real estate AI assistant helping realtors close more deals. When given a zip code or neighborhood name, ALWAYS search the web first to verify the correct city, neighborhood boundaries, local amenities, schools, and walkability data before writing anything. Never guess or hallucinate location details. Be specific, actionable, and concise.",
       messages: [{ role: "user", content: prompt }],
     });
 
