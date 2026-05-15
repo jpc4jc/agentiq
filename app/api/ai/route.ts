@@ -48,12 +48,31 @@ Then add:
       messages: [{ role: "user", content: prompt }],
     });
 
-    const text = message.content
+    const rawText = message.content
       .filter((b: { type: string }) => b.type === "text")
       .map((b: { type: string; text: string }) => b.text)
       .join("");
 
-    return NextResponse.json({ result: text });
+    // Strip any research narration lines before the actual copy
+    const cleaned = rawText
+      .split("\n")
+      .filter((line: string) => {
+        const l = line.trim().toLowerCase();
+        return !(
+          l.startsWith("now i'll") ||
+          l.startsWith("now let me") ||
+          l.startsWith("let me") ||
+          l.startsWith("i'll search") ||
+          l.startsWith("i will search") ||
+          l.startsWith("based on my research") ||
+          l.startsWith("let me write") ||
+          (l.startsWith("i now have") || (l.startsWith("i have") && l.includes("information")))
+        );
+      })
+      .join("\n")
+      .trimStart();
+
+    return NextResponse.json({ result: cleaned });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unknown error";
     return NextResponse.json({ error: message }, { status: 500 });
