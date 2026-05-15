@@ -1,5 +1,5 @@
 "use client";
-import { Tool } from "@/app/page";
+import { Tool } from "@/app/dashboard/page";
 
 const tools: { id: Tool; label: string; icon: string; description: string }[] = [
   { id: "neighborhood", label: "Neighborhood story", icon: "📍", description: "Persona-targeted copy" },
@@ -28,7 +28,6 @@ export default function Sidebar({
         </div>
         <p className="text-xs text-gray-400 mt-0.5 ml-7">AI tools for realtors</p>
       </div>
-
       <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
         <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider px-2 mb-2">
           Tools
@@ -53,7 +52,6 @@ export default function Sidebar({
           </button>
         ))}
       </nav>
-
       <div className="px-5 py-4 border-t border-gray-100">
         <p className="text-[11px] text-gray-400">Powered by Claude AI</p>
       </div>
