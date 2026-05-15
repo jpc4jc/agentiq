@@ -88,7 +88,7 @@ export default function NeighborhoodTool() {
           </select>
         </div>
 
-        <RunButton onClick={run} loading={loading} label="Generate story" />
+        <RunButton onClick={run} loading={loading} label="Generate draft" />
       </div>
 
       <ResultBox loading={loading} result={result} label="Generated neighborhood copy" />
