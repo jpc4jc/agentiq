@@ -33,6 +33,8 @@ ACCURACY RULES:
 7. If you are unsure whether something is true, leave it out. A shorter accurate narrative is always better than a longer inaccurate one.
 
 OUTPUT FORMAT:
+Write the marketing copy directly. Do not narrate your research process or explain what you are searching for. Do not include any introductory sentences like "I'll search for..." or "Let me search for..." or "Based on my research...". Just write the copy.
+
 After the marketing copy, add two clearly labeled sections:
 ⚠️ VERIFY BEFORE PUBLISHING: List any specific claims (distances, rankings, stats, amenity names) the realtor should double-check with a local source before publishing.
 📚 SOURCES: List the URLs or sources you found during web search that informed this copy.`,
