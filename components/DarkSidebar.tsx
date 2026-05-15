@@ -45,27 +45,27 @@ export default function DarkSidebar({
           display: block;
         }
         .ds-logo-text span { color: #4f8ef7; }
-        .ds-logo-sub {
-          font-size: 0.68rem;
-          color: #4a5a6e;
-          margin-top: 0.2rem;
-          letter-spacing: 0.06em;
-          text-transform: uppercase;
-        }
+.ds-logo-sub {
+  font-size: 0.68rem;
+  color: #7a8fa8;
+  margin-top: 0.2rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
         .ds-nav {
           flex: 1;
           padding: 1rem 0.75rem;
           overflow-y: auto;
         }
-        .ds-section-label {
-          font-size: 0.65rem;
-          font-weight: 600;
-          text-transform: uppercase;
-          letter-spacing: 0.1em;
-          color: #4a5a6e;
-          padding: 0 0.5rem;
-          margin-bottom: 0.5rem;
-        }
+.ds-section-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #7a8fa8;
+  padding: 0 0.5rem;
+  margin-bottom: 0.5rem;
+}
         .ds-item {
           display: flex;
           align-items: center;
