@@ -23,7 +23,7 @@ export default function NeighborhoodTool() {
     if (!address) return;
     setLoading(true);
     setResult("");
-    const prompt = `Search the web to verify: what city and neighborhood is ${address} in? Then write 2 punchy MLS-ready paragraphs targeting ${selectedPersonas.join(", ")} buyers. Tone: ${tone}. Include walkability, schools, local flavor, and commute. End with 4 data tags formatted as "📍 Label: Value". Be specific, no clichés.`;
+    const prompt = `Search the web to verify what city and neighborhood ${address} is in. Then write 2 punchy MLS-ready paragraphs targeting ${selectedPersonas.join(", ")} buyers with a ${tone} tone. Include walkability, schools, local flavor, and commute highlights. End with 4 data tags formatted as "📍 Label: Value". Be specific, no clichés.`;
 
 Target buyer personas: ${selectedPersonas.join(", ")}
 Tone: ${tone}
