@@ -17,19 +17,36 @@ function parseResult(result: string): { type: "error" | "success"; text: string 
 }
 
 function formatResult(text: string): string {
-  return text
-    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-    .replace(/⚠️ VERIFY BEFORE PUBLISHING:(.*?)(?=📚 SOURCES:|$)/gs, (match) =>
-      `<div class="verify-block">${match}</div>`
-    )
-    .replace(/📚 SOURCES:(.*?)$/gs, (match) =>
-      `<div class="sources-block">${match}</div>`
-    )
-    .replace(/\n\n/g, "</p><p>")
-    .replace(/\n- /g, "</p><ul><li>")
-    .replace(/\n/g, "<br/>")
-    .replace(/^/, "<p>")
-    .replace(/$/, "</p>");
+  let main = text;
+  let verifyBlock = "";
+  let sourcesBlock = "";
+
+  const sourcesIndex = text.indexOf("📚 SOURCES:");
+  if (sourcesIndex !== -1) {
+    sourcesBlock = text.slice(sourcesIndex);
+    main = text.slice(0, sourcesIndex);
+  }
+
+  const verifyIndex = main.indexOf("⚠️ VERIFY BEFORE PUBLISHING:");
+  if (verifyIndex !== -1) {
+    verifyBlock = main.slice(verifyIndex);
+    main = main.slice(0, verifyIndex);
+  }
+
+  const format = (str: string) =>
+    str
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+      .replace(/\n\n/g, "</p><p>")
+      .replace(/\n- /g, "</p><ul><li>")
+      .replace(/\n/g, "<br/>")
+      .replace(/^/, "<p>")
+      .replace(/$/, "</p>");
+
+  return [
+    format(main),
+    verifyBlock ? `<div class="verify-block">${format(verifyBlock)}</div>` : "",
+    sourcesBlock ? `<div class="sources-block">${format(sourcesBlock)}</div>` : "",
+  ].join("");
 }
 
 export default function ResultBox({
@@ -47,7 +64,6 @@ export default function ResultBox({
 
   return (
     <div className="mt-6 space-y-3">
-      {/* Disclaimer banner */}
       {!loading && parsed.type === "success" && (
         <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
           <span className="text-amber-500 text-base mt-0.5">⚠️</span>
