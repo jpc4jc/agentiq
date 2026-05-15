@@ -104,6 +104,19 @@ export default function ResultBox({
                 font-size: 0.8rem;
                 color: #92400e;
               }
+              .verify-block ul, .sources-block ul {
+                list-style: disc;
+                padding-left: 1.25rem;
+                margin: 0;
+              }
+              .verify-block ul ul, .sources-block ul ul {
+                list-style: disc;
+                padding-left: 0;
+                margin: 0;
+              }
+              .verify-block li, .sources-block li {
+                margin-bottom: 0.25rem;
+              }
               .sources-block {
                 margin-top: 0.75rem;
                 padding: 0.75rem 1rem;
