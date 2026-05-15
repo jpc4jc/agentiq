@@ -1,38 +1,106 @@
-import { NextRequest, NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
+"use client";
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-
-export async function POST(req: NextRequest) {
-  try {
-    const { prompt, systemPrompt } = await req.json();
-
-    if (!prompt) {
-      return NextResponse.json({ error: "prompt is required" }, { status: 400 });
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const message = await (client.messages.create as any)({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 1024,
-      tools: [
-        {
-          type: "web_search_20250305",
-          name: "web_search",
-        },
-      ],
-      system: systemPrompt || "You are an expert real estate AI assistant helping realtors close more deals. When given a zip code or neighborhood name, ALWAYS search the web first to verify facts before writing anything. Follow these rules strictly: (1) NEVER mention sidewalks, walkability, or walking distance to any specific location unless you find explicit web sources confirming it. (2) NEVER claim a neighborhood is 'walkable' or use walk scores unless verified. (3) NEVER mention specific parks, trails, or amenities by name unless you find them in web search results. (4) NEVER describe physical neighborhood features like streets, paths, or infrastructure you cannot verify. (5) For schools, only mention rankings if the school is in the top 20% statewide — otherwise say 'served by local public schools' and nothing more. (6) If you are unsure whether something is true, leave it out entirely. It is far better to write a shorter, accurate narrative than a longer one with invented details. Stick to verifiable facts: location, community character, nearby towns, general lifestyle, and confirmed amenities only.",
-      messages: [{ role: "user", content: prompt }],
-    });
-
-    const text = message.content
-      .filter((b: { type: string }) => b.type === "text")
-      .map((b: { type: string; text: string }) => b.text)
-      .join("");
-
-    return NextResponse.json({ result: text });
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    return NextResponse.json({ error: message }, { status: 500 });
+function parseResult(result: string): { type: "error" | "success"; text: string } {
+  if (result.includes("rate_limit_error") || result.includes("rate limit")) {
+    return { type: "error", text: "⏳ Too many requests — please wait a moment and try again." };
   }
+  if (result.includes("authentication_error") || result.includes("invalid x-api-key")) {
+    return { type: "error", text: "🔑 API key issue — please check your Anthropic API key in Vercel settings." };
+  }
+  if (result.includes("overloaded_error")) {
+    return { type: "error", text: "😅 Claude is currently overloaded — please try again in a few seconds." };
+  }
+  if (result.startsWith("{") || result.startsWith("4")) {
+    return { type: "error", text: "⚠️ Something went wrong — please try again." };
+  }
+  return { type: "success", text: result };
+}
+
+function formatResult(text: string): string {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+    .replace(/⚠️ VERIFY BEFORE PUBLISHING:(.*?)(?=📚 SOURCES:|$)/gs, (match) =>
+      `<div class="verify-block">${match}</div>`
+    )
+    .replace(/📚 SOURCES:(.*?)$/gs, (match) =>
+      `<div class="sources-block">${match}</div>`
+    )
+    .replace(/\n\n/g, "</p><p>")
+    .replace(/\n- /g, "</p><ul><li>")
+    .replace(/\n/g, "<br/>")
+    .replace(/^/, "<p>")
+    .replace(/$/, "</p>");
+}
+
+export default function ResultBox({
+  loading,
+  result,
+  label = "AI Analysis",
+}: {
+  loading: boolean;
+  result: string;
+  label?: string;
+}) {
+  if (!loading && !result) return null;
+
+  const parsed = parseResult(result);
+
+  return (
+    <div className="mt-6 space-y-3">
+      {/* Disclaimer banner */}
+      {!loading && parsed.type === "success" && (
+        <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
+          <span className="text-amber-500 text-base mt-0.5">⚠️</span>
+          <p className="text-xs text-amber-700 leading-relaxed">
+            <strong>AI-generated first draft.</strong> Verify all facts, rankings, distances, and amenity names with local sources before publishing. Do not use as-is in MLS listings.
+          </p>
+        </div>
+      )}
+
+      <div className="bg-white border border-gray-200 rounded-xl p-5">
+        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-3">
+          {label}
+        </p>
+
+        {loading ? (
+          <div className="space-y-2">
+            <div className="h-3 bg-gray-100 rounded animate-pulse w-3/4" />
+            <div className="h-3 bg-gray-100 rounded animate-pulse w-full" />
+            <div className="h-3 bg-gray-100 rounded animate-pulse w-5/6" />
+            <div className="h-3 bg-gray-100 rounded animate-pulse w-2/3" />
+            <p className="text-xs text-gray-400 mt-3">Searching web and generating copy…</p>
+          </div>
+        ) : parsed.type === "error" ? (
+          <p className="text-sm text-amber-600 font-medium">{parsed.text}</p>
+        ) : (
+          <>
+            <div
+              className="ai-prose text-sm text-gray-700 leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: formatResult(parsed.text) }}
+            />
+            <style>{`
+              .verify-block {
+                margin-top: 1rem;
+                padding: 0.75rem 1rem;
+                background: #fffbeb;
+                border: 1px solid #fcd34d;
+                border-radius: 0.5rem;
+                font-size: 0.8rem;
+                color: #92400e;
+              }
+              .sources-block {
+                margin-top: 0.75rem;
+                padding: 0.75rem 1rem;
+                background: #f0f9ff;
+                border: 1px solid #bae6fd;
+                border-radius: 0.5rem;
+                font-size: 0.8rem;
+                color: #0369a1;
+              }
+            `}</style>
+          </>
+        )}
+      </div>
+    </div>
+  );
 }
