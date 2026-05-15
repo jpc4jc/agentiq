@@ -25,19 +25,6 @@ export default function NeighborhoodTool() {
     setResult("");
     const prompt = `Search the web to verify what city and neighborhood ${address} is in. Then write 2 punchy MLS-ready paragraphs targeting ${selectedPersonas.join(", ")} buyers with a ${tone} tone. Include walkability, schools, local flavor, and commute highlights. End with 4 data tags formatted as "📍 Label: Value". Be specific, no clichés.`;
 
-Target buyer personas: ${selectedPersonas.join(", ")}
-Tone: ${tone}
-
-Include:
-- What makes this neighborhood unique and irreplaceable
-- Walkability, transit, and commute highlights
-- School quality and family amenities (if relevant)
-- Local dining, culture, and lifestyle flavor
-- Seasonal character
-- Any BeltLine, greenspace, or community highlights
-
-Write 2-3 punchy paragraphs of MLS-ready copy per persona selected. Make it specific — avoid clichés like "move-in ready" or "won't last long". Then add a bullet list of 4-6 key data tags (walk score, schools, commute time, etc.) with placeholder values formatted as "📍 Label: Value".`;
-
     const res = await fetch("/api/ai", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
