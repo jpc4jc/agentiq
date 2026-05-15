@@ -33,14 +33,62 @@ function formatResult(text: string): string {
     main = main.slice(0, verifyIndex);
   }
 
-  const format = (str: string) =>
-    str
-      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-      .replace(/\n\n/g, "</p><p>")
-      .replace(/\n- /g, "</p><ul><li>")
-      .replace(/\n/g, "<br/>")
-      .replace(/^/, "<p>")
-      .replace(/$/, "</p>");
+  const format = (str: string): string => {
+    const lines = str.split("\n");
+    let html = "";
+    let inList = false;
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+
+      if (!trimmed) {
+        if (inList) { html += "</ul>"; inList = false; }
+        html += "<br/>";
+        continue;
+      }
+
+      // Headers: ##, ###
+      if (trimmed.startsWith("### ")) {
+        if (inList) { html += "</ul>"; inList = false; }
+        html += `<p class="ai-section-header">${trimmed.replace(/^###\s+/, "")}</p>`;
+        continue;
+      }
+      if (trimmed.startsWith("## ")) {
+        if (inList) { html += "</ul>"; inList = false; }
+        html += `<p class="ai-section-header">${trimmed.replace(/^##\s+/, "")}</p>`;
+        continue;
+      }
+      if (trimmed.startsWith("# ")) {
+        if (inList) { html += "</ul>"; inList = false; }
+        html += `<p class="ai-main-header">${trimmed.replace(/^#\s+/, "")}</p>`;
+        continue;
+      }
+
+      // Bullet points — all treated as same level
+      if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
+        if (!inList) { html += "<ul>"; inList = true; }
+        const content = trimmed.replace(/^[-*]\s+/, "").replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+        html += `<li>${content}</li>`;
+        continue;
+      }
+
+      // Numbered list
+      if (/^\d+\.\s/.test(trimmed)) {
+        if (inList) { html += "</ul>"; inList = false; }
+        const content = trimmed.replace(/^\d+\.\s+/, "").replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+        html += `<p class="ai-numbered">${content}</p>`;
+        continue;
+      }
+
+      // Regular paragraph
+      if (inList) { html += "</ul>"; inList = false; }
+      const content = trimmed.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+      html += `<p>${content}</p>`;
+    }
+
+    if (inList) html += "</ul>";
+    return html;
+  };
 
   return [
     format(main),
@@ -95,6 +143,38 @@ export default function ResultBox({
               dangerouslySetInnerHTML={{ __html: formatResult(parsed.text) }}
             />
             <style>{`
+              .ai-prose p { margin-bottom: 0.6rem; }
+              .ai-prose ul {
+                list-style: disc;
+                padding-left: 1.25rem;
+                margin-bottom: 0.6rem;
+              }
+              .ai-prose ul ul {
+                padding-left: 0;
+                list-style: disc;
+              }
+              .ai-prose li { margin-bottom: 0.2rem; line-height: 1.5; }
+              .ai-section-header {
+                font-weight: 600;
+                font-size: 0.8rem;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                color: #4b5563;
+                margin-top: 1rem;
+                margin-bottom: 0.3rem;
+              }
+              .ai-main-header {
+                font-weight: 700;
+                font-size: 0.95rem;
+                color: #1f2937;
+                margin-top: 0.5rem;
+                margin-bottom: 0.3rem;
+              }
+              .ai-numbered {
+                padding-left: 0.5rem;
+                margin-bottom: 0.4rem;
+                border-left: 2px solid #e5e7eb;
+              }
               .verify-block {
                 margin-top: 1rem;
                 padding: 0.75rem 1rem;
@@ -103,19 +183,6 @@ export default function ResultBox({
                 border-radius: 0.5rem;
                 font-size: 0.8rem;
                 color: #92400e;
-              }
-              .verify-block ul, .sources-block ul {
-                list-style: disc;
-                padding-left: 1.25rem;
-                margin: 0;
-              }
-              .verify-block ul ul, .sources-block ul ul {
-                list-style: disc;
-                padding-left: 0;
-                margin: 0;
-              }
-              .verify-block li, .sources-block li {
-                margin-bottom: 0.25rem;
               }
               .sources-block {
                 margin-top: 0.75rem;
