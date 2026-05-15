@@ -47,7 +47,7 @@ export default function DarkSidebar({
         .ds-logo-text span { color: #4f8ef7; }
         .ds-logo-sub {
           font-size: 0.68rem;
-          color: #2e3a50;
+          color: #4a5a6e;
           margin-top: 0.2rem;
           letter-spacing: 0.06em;
           text-transform: uppercase;
@@ -62,7 +62,7 @@ export default function DarkSidebar({
           font-weight: 600;
           text-transform: uppercase;
           letter-spacing: 0.1em;
-          color: #2e3a50;
+          color: #4a5a6e;
           padding: 0 0.5rem;
           margin-bottom: 0.5rem;
         }
@@ -81,22 +81,27 @@ export default function DarkSidebar({
           background: none;
           font-family: 'DM Sans', sans-serif;
         }
-        .ds-item:hover { background: rgba(255,255,255,0.04); }
+        .ds-item:hover { background: rgba(255,255,255,0.06); }
         .ds-item.active {
-          background: rgba(79,142,247,0.12);
-          border-color: rgba(79,142,247,0.2);
+          background: rgba(79,142,247,0.15);
+          border-color: rgba(79,142,247,0.25);
         }
-        .ds-item-icon { font-size: 0.95rem; width: 18px; text-align: center; flex-shrink: 0; }
+        .ds-item-icon {
+          font-size: 0.95rem;
+          width: 18px;
+          text-align: center;
+          flex-shrink: 0;
+        }
         .ds-item-label {
           font-size: 0.82rem;
           font-weight: 500;
-          color: #5a6a80;
+          color: #8fa3c0;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
         }
         .ds-item.active .ds-item-label { color: #7eb3ff; }
-        .ds-item:hover:not(.active) .ds-item-label { color: #c8d0e0; }
+        .ds-item:hover:not(.active) .ds-item-label { color: #e2e8f0; }
         .ds-footer {
           padding: 1rem 1.25rem;
           border-top: 1px solid rgba(255,255,255,0.05);
@@ -106,14 +111,14 @@ export default function DarkSidebar({
           align-items: center;
           gap: 0.3rem;
           font-size: 0.72rem;
-          color: #2e3a50;
+          color: #4a5a6e;
           text-decoration: none;
           margin-bottom: 0.6rem;
           transition: color 0.15s;
           font-family: 'DM Sans', sans-serif;
         }
         .ds-back:hover { color: #4f8ef7; }
-        .ds-footer-text { font-size: 0.65rem; color: #1e2a3a; }
+        .ds-footer-text { font-size: 0.65rem; color: #4a5a6e; }
       `}</style>
       <aside className="dark-sidebar">
         <div className="ds-logo-wrap">
