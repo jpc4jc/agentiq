@@ -23,8 +23,8 @@ export default function NeighborhoodTool() {
     if (!address) return;
     setLoading(true);
     setResult("");
-    const prompt = `Search the web to verify what city and neighborhood ${address} is in. Then write 2 punchy MLS-ready paragraphs targeting ${selectedPersonas.join(", ")} buyers with a ${tone} tone. Include walkability, schools, local flavor, and commute highlights. End with 4 data tags formatted as "📍 Label: Value". Be specific, no clichés.`;
-
+    const prompt = `Search the web to verify what city and neighborhood ${address} is in. Then write 2 punchy MLS-ready paragraphs targeting ${selectedPersonas.join(", ")} buyers with a ${tone} tone. Include verified commute times, community character, and confirmed local events or amenities. Do NOT mention walking distance to anything. Do NOT mention schools unless they rank in the top 20% statewide — if unsure, omit schools entirely. End with 4 data tags formatted as "📍 Label: Value". Be specific, no clichés.`;
+    
     const res = await fetch("/api/ai", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
