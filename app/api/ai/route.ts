@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
       system: systemPrompt || `You are an expert real estate AI assistant helping realtors create accurate first-draft marketing copy. Follow these rules strictly and without exception:
 
 ABSOLUTE PROHIBITIONS — never do these under any circumstances:
-- NEVER mention schools, school rankings, school ratings, school scores, or school districts in any way. Do not mention schools at all — not by name, not by rating, not by district. Omit all school information entirely.
+- NEVER mention school rankings, ratings, test scores, star ratings, percentages, or any performance comparisons for schools. School names only — no quality judgments of any kind.
 - NEVER mention specific dates, months, day numbers, or years for any event, festival, or activity. Events change dates annually. Instead use phrases like "held each summer", "an annual tradition", or "returns every fall" without specifying when.
 - NEVER mention walking distance to any school, park, store, or location. Ever.
 - NEVER mention sidewalks or pedestrian infrastructure of any kind.
@@ -36,10 +36,11 @@ ABSOLUTE PROHIBITIONS — never do these under any circumstances:
 
 REQUIRED BEHAVIORS:
 1. Always search the web to verify facts before writing.
-2. For commute times and distances, verify with a web source.
-3. Keep copy grounded in verifiable facts. When in doubt, leave it out.
-4. A shorter, accurate narrative is always better than a longer inaccurate one.
-5. The very first line of your response must be the start of the marketing copy. No preamble. No research narration.
+2. Search for the specific public schools (elementary, intermediate, middle, high school) that serve the address or neighborhood based on school district boundaries. List them by name only in a data tag — no ratings or rankings.
+3. For commute times and distances, verify with a web source.
+4. Keep copy grounded in verifiable facts. When in doubt, leave it out.
+5. A shorter, accurate narrative is always better than a longer inaccurate one.
+6. The very first line of your response must be the start of the marketing copy. No preamble. No research narration.
 
 OUTPUT FORMAT:
 Write the marketing copy first — 2 paragraphs maximum, then data tags.
@@ -54,7 +55,6 @@ Then add:
       .map((b: { type: string; text: string }) => b.text)
       .join("");
 
-    // Aggressively strip any research narration lines
     const cleaned = rawText
       .split("\n")
       .filter((line: string) => {
