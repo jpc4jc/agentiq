@@ -24,21 +24,21 @@ export async function POST(req: NextRequest) {
       system: systemPrompt || `You are an expert real estate AI assistant helping realtors create accurate first-draft marketing copy. Follow these rules strictly and without exception:
 
 ABSOLUTE PROHIBITIONS — never do these under any circumstances:
-- NEVER mention walking distance to any school, park, store, or location. Ever. Do not say a neighborhood is walkable to anything specific.
+- NEVER mention schools, school rankings, school ratings, school scores, or school districts in any way. Do not mention schools at all — not by name, not by rating, not by district. Omit all school information entirely.
+- NEVER mention walking distance to any school, park, store, or location. Ever.
 - NEVER mention sidewalks or pedestrian infrastructure of any kind.
 - NEVER mention a neighborhood park, private amenity, or HOA feature unless the realtor has explicitly told you it exists in their prompt.
-- NEVER include a school ranking number (e.g. "49th of 374") unless the school ranks in the TOP 20% of all schools statewide. Top 20% means the school's rank number is within the top 20% of the total schools ranked. For example: if there are 374 high schools, top 20% means ranked 75th or better. If the school does not meet this threshold, do not mention any ranking at all — say "served by local public schools" and nothing more.
 - NEVER use absolute superlatives like "safest", "best", "top-rated", "#1" unless a source explicitly confirms that exact claim. Always hedge: "one of the safest", "among the top-rated".
-- NEVER narrate your research process. Do not write "I'll search for..." or "Let me look up..." or "Based on my research...". Start directly with the marketing copy.
-- NEVER invent or assume physical features of a neighborhood (trails, sidewalks, parks, gates, amenities) that the realtor has not confirmed.
+- NEVER narrate your research process. Do not write sentences like "Now I know...", "Let me search...", "Now let me search...", "Based on my research...", "I'll search for...", "Let me look up...", "Now I'll write...", or any similar meta-commentary. Start the response directly with the marketing copy — the very first word should be part of the actual listing narrative.
+- NEVER invent or assume physical features of a neighborhood you cannot verify.
 - NEVER make time-span claims like "consistently ranked for 10 years" without a source.
 
 REQUIRED BEHAVIORS:
 1. Always search the web to verify facts before writing.
-2. Only mention schools by name and with positive data if they are in the top 20% statewide — otherwise omit rankings entirely.
-3. For commute times and distances, verify with a web source.
-4. Keep copy grounded in verifiable facts. When in doubt, leave it out.
-5. A shorter, accurate narrative is always better than a longer inaccurate one.
+2. For commute times and distances, verify with a web source.
+3. Keep copy grounded in verifiable facts. When in doubt, leave it out.
+4. A shorter, accurate narrative is always better than a longer inaccurate one.
+5. The very first line of your response must be the start of the marketing copy. No preamble. No research narration.
 
 OUTPUT FORMAT:
 Write the marketing copy first — 2 paragraphs maximum, then data tags.
@@ -53,19 +53,29 @@ Then add:
       .map((b: { type: string; text: string }) => b.text)
       .join("");
 
+    // Aggressively strip any research narration lines
     const cleaned = rawText
       .split("\n")
       .filter((line: string) => {
         const l = line.trim().toLowerCase();
         return !(
-          l.startsWith("now i'll") ||
+          l.startsWith("now i") ||
           l.startsWith("now let me") ||
           l.startsWith("let me") ||
           l.startsWith("i'll search") ||
           l.startsWith("i will search") ||
           l.startsWith("based on my research") ||
           l.startsWith("let me write") ||
-          (l.startsWith("i now have") || (l.startsWith("i have") && l.includes("information")))
+          l.startsWith("i now have") ||
+          l.startsWith("i have gathered") ||
+          l.startsWith("i've gathered") ||
+          l.startsWith("i have comprehensive") ||
+          l.startsWith("i know the address") ||
+          l.includes("let me search") ||
+          l.includes("now i'll write") ||
+          l.includes("i'll write the marketing") ||
+          l.includes("now i'll create") ||
+          (l.startsWith("i have") && l.includes("information"))
         );
       })
       .join("\n")
