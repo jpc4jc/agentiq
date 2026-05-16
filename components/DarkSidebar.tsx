@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Tool } from "@/types/tools";
+import { Tool } from "@/app/dashboard/page";
 
 const tools: { id: Tool; label: string; icon: string }[] = [
   { id: "neighborhood", label: "Neighborhood story", icon: "📍" },
