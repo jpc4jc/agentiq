@@ -25,8 +25,12 @@ export default function Dashboard() {
   return (
     <div style={{ display: "flex", height: "100vh", overflow: "hidden", background: "#0f1422" }}>
       <DarkSidebar activeTool={activeTool} setActiveTool={setActiveTool} />
-      <main style={{ flex: 1, overflowY: "auto", background: "#f8f9fc" }}>
-        <div style={{ maxWidth: "760px", margin: "0 auto", padding: "2.5rem 2rem" }}>
+    <main style={{
+  flex: 1,
+  overflowY: "auto",
+  background: "#f8f9fc",
+  paddingBottom: "80px"  // clears the mobile tab bar
+}}>
           {tools[activeTool]}
         </div>
       </main>
