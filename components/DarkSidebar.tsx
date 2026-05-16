@@ -1,14 +1,14 @@
 "use client";
 import Link from "next/link";
-import { Tool } from "@/app/dashboard/page";
+import { Tool } from "@/types/tools";
 
 const tools: { id: Tool; label: string; icon: string }[] = [
-  { id: "neighborhood", label: "Neighborhood", icon: "📍" },
-  { id: "offer", label: "Offer", icon: "📈" },
-  { id: "photo", label: "Photos", icon: "📷" },
-  { id: "client", label: "Clients", icon: "🤝" },
-  { id: "docs", label: "Docs", icon: "🔍" },
-  { id: "diagnostic", label: "Diagnostic", icon: "🩺" },
+  { id: "neighborhood", label: "Neighborhood story", icon: "📍" },
+  { id: "offer", label: "Offer strategy", icon: "📈" },
+  { id: "photo", label: "Photo critique", icon: "📷" },
+  { id: "client", label: "Client matcher", icon: "🤝" },
+  { id: "docs", label: "Doc risk scanner", icon: "🔍" },
+  { id: "diagnostic", label: "Listing diagnostic", icon: "🩺" },
 ];
 
 export default function DarkSidebar({
@@ -23,7 +23,6 @@ export default function DarkSidebar({
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
 
-        /* ── Desktop sidebar ── */
         .dark-sidebar {
           width: 220px;
           min-width: 220px;
@@ -88,7 +87,12 @@ export default function DarkSidebar({
           background: rgba(79,142,247,0.15);
           border-color: rgba(79,142,247,0.25);
         }
-        .ds-item-icon { font-size: 0.95rem; width: 18px; text-align: center; flex-shrink: 0; }
+        .ds-item-icon {
+          font-size: 0.95rem;
+          width: 18px;
+          text-align: center;
+          flex-shrink: 0;
+        }
         .ds-item-label {
           font-size: 0.82rem;
           font-weight: 500;
@@ -117,7 +121,6 @@ export default function DarkSidebar({
         .ds-back:hover { color: #4f8ef7; }
         .ds-footer-text { font-size: 0.65rem; color: #7a8fa8; }
 
-        /* ── Mobile bottom tab bar ── */
         .mobile-tab-bar {
           display: none;
           position: fixed;
@@ -159,7 +162,6 @@ export default function DarkSidebar({
         }
         .mobile-tab-item.active .mobile-tab-label { color: #7eb3ff; }
 
-        /* ── Mobile top header ── */
         .mobile-header {
           display: none;
           align-items: center;
@@ -186,7 +188,6 @@ export default function DarkSidebar({
           font-family: 'DM Sans', sans-serif;
         }
 
-        /* ── Responsive breakpoint ── */
         @media (max-width: 768px) {
           .dark-sidebar { display: none; }
           .mobile-tab-bar { display: block; }
