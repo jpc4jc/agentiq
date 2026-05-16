@@ -8,8 +8,6 @@ import ClientTool from "@/components/tools/ClientTool";
 import DocTool from "@/components/tools/DocTool";
 import DiagnosticTool from "@/components/tools/DiagnosticTool";
 
-export const dynamic = "force-dynamic";
-
 export type Tool = "neighborhood" | "offer" | "photo" | "client" | "docs" | "diagnostic";
 
 export default function Dashboard() {
