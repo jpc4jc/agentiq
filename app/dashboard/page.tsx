@@ -2,14 +2,16 @@
 import { useState } from "react";
 import { Tool } from "@/types/tools";
 import DarkSidebar from "@/components/DarkSidebar";
-import NeighborhoodTool from "@/components/tools/NeighborhoodTool";
-import OfferTool from "@/components/tools/OfferTool";
-import PhotoTool from "@/components/tools/PhotoTool";
-import ClientTool from "@/components/tools/ClientTool";
-import DocTool from "@/components/tools/DocTool";
-import DiagnosticTool from "@/components/tools/DiagnosticTool";
+import dynamic from "next/dynamic";
 
 export type { Tool } from "@/types/tools";
+
+const NeighborhoodTool = dynamic(() => import("@/components/tools/NeighborhoodTool"), { ssr: false });
+const OfferTool = dynamic(() => import("@/components/tools/OfferTool"), { ssr: false });
+const PhotoTool = dynamic(() => import("@/components/tools/PhotoTool"), { ssr: false });
+const ClientTool = dynamic(() => import("@/components/tools/ClientTool"), { ssr: false });
+const DocTool = dynamic(() => import("@/components/tools/DocTool"), { ssr: false });
+const DiagnosticTool = dynamic(() => import("@/components/tools/DiagnosticTool"), { ssr: false });
 
 export default function DashboardPage() {
   const [activeTool, setActiveTool] = useState<Tool>("neighborhood");
