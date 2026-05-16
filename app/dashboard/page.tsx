@@ -13,8 +13,6 @@ const ClientTool = dynamic(() => import("@/components/tools/ClientTool"), { ssr:
 const DocTool = dynamic(() => import("@/components/tools/DocTool"), { ssr: false, loading: () => <p style={{padding:"2rem", color:"#666"}}>Loading...</p> });
 const DiagnosticTool = dynamic(() => import("@/components/tools/DiagnosticTool"), { ssr: false, loading: () => <p style={{padding:"2rem", color:"#666"}}>Loading...</p> });
 
-const TAB_BAR_HEIGHT = 70;
-
 export default function DashboardPage() {
   const [activeTool, setActiveTool] = useState<Tool>("neighborhood");
   const [isMobile, setIsMobile] = useState(false);
@@ -71,7 +69,9 @@ export default function DashboardPage() {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          flex-shrink: 0;
+          position: sticky;
+          top: 0;
+          z-index: 100;
         }
         .mobile-logo {
           font-family: 'DM Serif Display', serif;
@@ -87,12 +87,16 @@ export default function DashboardPage() {
           font-family: 'DM Sans', sans-serif;
         }
         .mobile-tabs {
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
           background: #0a0f1e;
           border-top: 1px solid rgba(255,255,255,0.08);
           z-index: 200;
           display: flex;
-          flex-shrink: 0;
           padding-bottom: env(safe-area-inset-bottom);
+          height: 64px;
         }
         .mobile-tab {
           flex: 1;
@@ -116,7 +120,7 @@ export default function DashboardPage() {
         }
         .mobile-tab.active .mobile-tab-label { color: #7eb3ff; }
         @media (max-width: 900px) {
-          .dashboard-inner { padding: 1rem 1rem 2rem; }
+          .dashboard-inner { padding: 1rem 1rem 120px; }
         }
       `}</style>
 
@@ -126,7 +130,6 @@ export default function DashboardPage() {
           flexDirection: "column",
           height: "100vh",
           background: "#f8f9fc",
-          overflow: "hidden",
         }}>
           <div className="mobile-top">
             <a href="/" className="mobile-logo">Agent<span>IQ</span></a>
@@ -135,12 +138,10 @@ export default function DashboardPage() {
           <div style={{
             flex: 1,
             overflowY: "auto",
-            WebkitOverflowScrolling: "touch",
+            WebkitOverflowScrolling: "touch" as React.CSSProperties["WebkitOverflowScrolling"],
           }}>
             <div className="dashboard-inner">
               {tools[activeTool]}
-              {/* Spacer so content clears the tab bar */}
-              <div style={{ height: `${TAB_BAR_HEIGHT + 24}px` }} />
             </div>
           </div>
           <div className="mobile-tabs">
