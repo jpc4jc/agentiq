@@ -8,3 +8,9 @@ html, body {
 .ai-prose ul { list-style: disc; padding-left: 1.25rem; margin-bottom: 0.75rem; }
 .ai-prose li { margin-bottom: 0.25rem; line-height: 1.6; }
 .ai-prose strong { font-weight: 600; }
+
+@media (max-width: 900px) {
+  .dark-sidebar { display: none !important; }
+  .mobile-tab-bar { display: block !important; }
+  .mobile-header { display: flex !important; }
+}
