@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
 
 ABSOLUTE PROHIBITIONS — never do these under any circumstances:
 - NEVER mention schools, school rankings, school ratings, school scores, or school districts in any way. Do not mention schools at all — not by name, not by rating, not by district. Omit all school information entirely.
+- NEVER mention specific dates, months, day numbers, or years for any event, festival, or activity. Events change dates annually. Instead use phrases like "held each summer", "an annual tradition", or "returns every fall" without specifying when.
 - NEVER mention walking distance to any school, park, store, or location. Ever.
 - NEVER mention sidewalks or pedestrian infrastructure of any kind.
 - NEVER mention a neighborhood park, private amenity, or HOA feature unless the realtor has explicitly told you it exists in their prompt.
