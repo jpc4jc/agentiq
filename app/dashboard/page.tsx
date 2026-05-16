@@ -17,7 +17,7 @@ export default function DashboardPage() {
   const [activeTool, setActiveTool] = useState<Tool>("neighborhood");
 
   const tools: Record<Tool, React.ReactNode> = {
-    neighborhood: <div style={{padding:"2rem"}}><h1>Test</h1><p>Dashboard is working!</p></div>,
+    neighborhood: <NeighborhoodTool />,
     offer: <OfferTool />,
     photo: <PhotoTool />,
     client: <ClientTool />,
