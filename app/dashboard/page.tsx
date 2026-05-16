@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { Tool } from "@/types/tools";
 import DarkSidebar from "@/components/DarkSidebar";
 import NeighborhoodTool from "@/components/tools/NeighborhoodTool";
 import OfferTool from "@/components/tools/OfferTool";
