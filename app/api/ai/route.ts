@@ -53,7 +53,6 @@ Then add:
       .map((b: { type: string; text: string }) => b.text)
       .join("");
 
-    // Strip any research narration lines before the actual copy
     const cleaned = rawText
       .split("\n")
       .filter((line: string) => {
@@ -74,7 +73,8 @@ Then add:
 
     return NextResponse.json({ result: cleaned });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Unknown error";
+    const message = err instanceof Error ? err.message : String(err);
+    console.error("AgentIQ API error:", message);
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
