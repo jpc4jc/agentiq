@@ -1,16 +1,27 @@
 "use client";
-import { useState } from "react";
-import DarkSidebar from "@/components/DarkSidebar";
-import NeighborhoodTool from "@/components/tools/NeighborhoodTool";
-import OfferTool from "@/components/tools/OfferTool";
-import PhotoTool from "@/components/tools/PhotoTool";
-import ClientTool from "@/components/tools/ClientTool";
-import DocTool from "@/components/tools/DocTool";
-import DiagnosticTool from "@/components/tools/DiagnosticTool";
+import { useState, useEffect } from "react";
 import { Tool } from "@/types/tools";
+
+// Lazy load everything to prevent circular deps
+import dynamic from "next/dynamic";
+
+const DarkSidebar = dynamic(() => import("@/components/DarkSidebar"), { ssr: false });
+const NeighborhoodTool = dynamic(() => import("@/components/tools/NeighborhoodTool"), { ssr: false });
+const OfferTool = dynamic(() => import("@/components/tools/OfferTool"), { ssr: false });
+const PhotoTool = dynamic(() => import("@/components/tools/PhotoTool"), { ssr: false });
+const ClientTool = dynamic(() => import("@/components/tools/ClientTool"), { ssr: false });
+const DocTool = dynamic(() => import("@/components/tools/DocTool"), { ssr: false });
+const DiagnosticTool = dynamic(() => import("@/components/tools/DiagnosticTool"), { ssr: false });
 
 export default function DashboardClient() {
   const [activeTool, setActiveTool] = useState<Tool>("neighborhood");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   const tools: Record<Tool, React.ReactNode> = {
     neighborhood: <NeighborhoodTool />,
