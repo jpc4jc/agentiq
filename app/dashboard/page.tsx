@@ -8,7 +8,7 @@ import ClientTool from "@/components/tools/ClientTool";
 import DocTool from "@/components/tools/DocTool";
 import DiagnosticTool from "@/components/tools/DiagnosticTool";
 
-export type Tool = "neighborhood" | "offer" | "photo" | "client" | "docs" | "diagnostic";
+export type { Tool } from "@/types/tools";
 
 export default function DashboardPage() {
   const [activeTool, setActiveTool] = useState<Tool>("neighborhood");
