@@ -19,7 +19,7 @@ const DashboardClient = dynamic(() => import("@/components/DashboardClient"), {
   ),
 });
 
-export type Tool = "neighborhood" | "offer" | "photo" | "client" | "docs" | "diagnostic";
+export { type Tool } from "@/types/tools";
 
 export default function DashboardPage() {
   return <DashboardClient />;
