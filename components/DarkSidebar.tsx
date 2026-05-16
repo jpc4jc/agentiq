@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import { Tool } from "@/types/tools";
 
 const tools: { id: Tool; label: string; icon: string }[] = [
@@ -18,11 +19,19 @@ export default function DarkSidebar({
   activeTool: Tool;
   setActiveTool: (t: Tool) => void;
 }) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 900);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
   return (
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
-
         .dark-sidebar {
           width: 220px;
           min-width: 220px;
@@ -87,12 +96,7 @@ export default function DarkSidebar({
           background: rgba(79,142,247,0.15);
           border-color: rgba(79,142,247,0.25);
         }
-        .ds-item-icon {
-          font-size: 0.95rem;
-          width: 18px;
-          text-align: center;
-          flex-shrink: 0;
-        }
+        .ds-item-icon { font-size: 0.95rem; width: 18px; text-align: center; flex-shrink: 0; }
         .ds-item-label {
           font-size: 0.82rem;
           font-weight: 500;
@@ -120,9 +124,7 @@ export default function DarkSidebar({
         }
         .ds-back:hover { color: #4f8ef7; }
         .ds-footer-text { font-size: 0.65rem; color: #7a8fa8; }
-
         .mobile-tab-bar {
-          display: none;
           position: fixed;
           bottom: 0;
           left: 0;
@@ -161,9 +163,8 @@ export default function DarkSidebar({
           letter-spacing: 0.02em;
         }
         .mobile-tab-item.active .mobile-tab-label { color: #7eb3ff; }
-
         .mobile-header {
-          display: none;
+          display: flex;
           align-items: center;
           justify-content: space-between;
           padding: 1rem 1.25rem;
@@ -187,60 +188,60 @@ export default function DarkSidebar({
           text-decoration: none;
           font-family: 'DM Sans', sans-serif;
         }
-
-        @media (max-width: 900px) {
-          .dark-sidebar { display: none !important; }
-          .mobile-tab-bar { display: block !important; }
-          .mobile-header { display: flex !important; }
-        }
       `}</style>
 
-      {/* Desktop sidebar */}
-      <aside className="dark-sidebar">
-        <div className="ds-logo-wrap">
-          <a href="/" className="ds-logo-text">Agent<span>IQ</span></a>
-          <div className="ds-logo-sub">AI tools for realtors</div>
-        </div>
-        <nav className="ds-nav">
-          <div className="ds-section-label">Tools</div>
-          {tools.map((tool) => (
-            <button
-              key={tool.id}
-              onClick={() => setActiveTool(tool.id)}
-              className={`ds-item${activeTool === tool.id ? " active" : ""}`}
-            >
-              <span className="ds-item-icon">{tool.icon}</span>
-              <span className="ds-item-label">{tool.label}</span>
-            </button>
-          ))}
-        </nav>
-        <div className="ds-footer">
-          <Link href="/" className="ds-back">← Home</Link>
-          <div className="ds-footer-text">Powered by Claude AI</div>
-        </div>
-      </aside>
+      {/* Desktop sidebar — hidden on mobile via JS */}
+      {!isMobile && (
+        <aside className="dark-sidebar">
+          <div className="ds-logo-wrap">
+            <a href="/" className="ds-logo-text">Agent<span>IQ</span></a>
+            <div className="ds-logo-sub">AI tools for realtors</div>
+          </div>
+          <nav className="ds-nav">
+            <div className="ds-section-label">Tools</div>
+            {tools.map((tool) => (
+              <button
+                key={tool.id}
+                onClick={() => setActiveTool(tool.id)}
+                className={`ds-item${activeTool === tool.id ? " active" : ""}`}
+              >
+                <span className="ds-item-icon">{tool.icon}</span>
+                <span className="ds-item-label">{tool.label}</span>
+              </button>
+            ))}
+          </nav>
+          <div className="ds-footer">
+            <Link href="/" className="ds-back">← Home</Link>
+            <div className="ds-footer-text">Powered by Claude AI</div>
+          </div>
+        </aside>
+      )}
 
       {/* Mobile top header */}
-      <div className="mobile-header">
-        <a href="/" className="mobile-header-logo">Agent<span>IQ</span></a>
-        <a href="/" className="mobile-header-back">← Home</a>
-      </div>
+      {isMobile && (
+        <div className="mobile-header">
+          <a href="/" className="mobile-header-logo">Agent<span>IQ</span></a>
+          <a href="/" className="mobile-header-back">← Home</a>
+        </div>
+      )}
 
       {/* Mobile bottom tab bar */}
-      <div className="mobile-tab-bar">
-        <div className="mobile-tab-inner">
-          {tools.map((tool) => (
-            <button
-              key={tool.id}
-              onClick={() => setActiveTool(tool.id)}
-              className={`mobile-tab-item${activeTool === tool.id ? " active" : ""}`}
-            >
-              <span className="mobile-tab-icon">{tool.icon}</span>
-              <span className="mobile-tab-label">{tool.label}</span>
-            </button>
-          ))}
+      {isMobile && (
+        <div className="mobile-tab-bar">
+          <div className="mobile-tab-inner">
+            {tools.map((tool) => (
+              <button
+                key={tool.id}
+                onClick={() => setActiveTool(tool.id)}
+                className={`mobile-tab-item${activeTool === tool.id ? " active" : ""}`}
+              >
+                <span className="mobile-tab-icon">{tool.icon}</span>
+                <span className="mobile-tab-label">{tool.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 }
