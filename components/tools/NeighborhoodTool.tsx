@@ -1,61 +1,97 @@
 "use client";
 import { useState } from "react";
-import DarkSidebar from "@/components/DarkSidebar";
-import NeighborhoodTool from "@/components/tools/NeighborhoodTool";
-import OfferTool from "@/components/tools/OfferTool";
-import PhotoTool from "@/components/tools/PhotoTool";
-import ClientTool from "@/components/tools/ClientTool";
-import DocTool from "@/components/tools/DocTool";
-import DiagnosticTool from "@/components/tools/DiagnosticTool";
+import ToolShell from "@/components/ui/ToolShell";
+import ResultBox from "@/components/ui/ResultBox";
+import RunButton from "@/components/ui/RunButton";
 
-export type Tool = "neighborhood" | "offer" | "photo" | "client" | "docs" | "diagnostic";
+const personas = ["Young families", "Remote workers", "Retirees", "Investors", "First-time buyers", "Luxury buyers"];
 
-export default function Dashboard() {
-  const [activeTool, setActiveTool] = useState<Tool>("neighborhood");
+export default function NeighborhoodTool() {
+  const [address, setAddress] = useState("");
+  const [selectedPersonas, setSelectedPersonas] = useState<string[]>(["Young families"]);
+  const [tone, setTone] = useState("warm and community-focused");
+  const [result, setResult] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const tools: Record<Tool, React.ReactNode> = {
-    neighborhood: <NeighborhoodTool />,
-    offer: <OfferTool />,
-    photo: <PhotoTool />,
-    client: <ClientTool />,
-    docs: <DocTool />,
-    diagnostic: <DiagnosticTool />,
+  const togglePersona = (p: string) => {
+    setSelectedPersonas((prev) =>
+      prev.includes(p) ? prev.filter((x) => x !== p) : [...prev, p]
+    );
+  };
+
+  const run = async () => {
+    if (!address) return;
+    setLoading(true);
+    setResult("");
+    const prompt = `Search the web to verify what city and neighborhood ${address} is in. Then write 2 punchy MLS-ready paragraphs targeting ${selectedPersonas.join(", ")} buyers with a ${tone} tone. Include verified commute times, community character, and confirmed local events or amenities. Do NOT mention schools, school rankings, or school districts under any circumstances. Do NOT mention walking distance to anything. End with 4 data tags formatted as "📍 Label: Value".`;
+
+    const res = await fetch("/api/ai", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt }),
+    });
+    const data = await res.json();
+    setResult(data.result || data.error);
+    setLoading(false);
   };
 
   return (
-    <>
-      <style>{`
-        .dashboard-shell {
-          display: flex;
-          height: 100vh;
-          overflow: hidden;
-          background: #0f1422;
-        }
-        .dashboard-main {
-          flex: 1;
-          overflow-y: auto;
-          background: #f8f9fc;
-          padding-bottom: 80px;
-        }
-        .dashboard-inner {
-          max-width: 760px;
-          margin: 0 auto;
-          padding: 2.5rem 2rem;
-        }
-        @media (max-width: 768px) {
-          .dashboard-inner {
-            padding: 1.25rem 1rem;
-          }
-        }
-      `}</style>
-      <div className="dashboard-shell">
-        <DarkSidebar activeTool={activeTool} setActiveTool={setActiveTool} />
-        <main className="dashboard-main">
-          <div className="dashboard-inner">
-            {tools[activeTool]}
+    <ToolShell
+      title="Neighborhood storyteller"
+      subtitle="Generate buyer-persona-targeted neighborhood copy in seconds."
+    >
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Address, neighborhood, or ZIP code
+          </label>
+          <input
+            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="e.g. Grant Park, Atlanta GA 30312"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Target buyer personas
+          </label>
+          <div className="flex flex-wrap gap-2">
+            {personas.map((p) => (
+              <button
+                key={p}
+                onClick={() => togglePersona(p)}
+                className={`text-sm px-3 py-1.5 rounded-full border transition-all ${
+                  selectedPersonas.includes(p)
+                    ? "bg-blue-50 border-blue-300 text-blue-700 font-medium"
+                    : "border-gray-200 text-gray-500 hover:border-gray-300"
+                }`}
+              >
+                {p}
+              </button>
+            ))}
           </div>
-        </main>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Tone</label>
+          <select
+            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={tone}
+            onChange={(e) => setTone(e.target.value)}
+          >
+            <option>warm and community-focused</option>
+            <option>aspirational and lifestyle-driven</option>
+            <option>data-forward and practical</option>
+            <option>luxury and sophisticated</option>
+          </select>
+        </div>
+
+        <RunButton onClick={run} loading={loading} label="Generate draft" />
       </div>
-    </>
+
+      <ResultBox loading={loading} result={result} label="Generated neighborhood copy" />
+    </ToolShell>
   );
 }
