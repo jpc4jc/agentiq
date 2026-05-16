@@ -13,6 +13,8 @@ const ClientTool = dynamic(() => import("@/components/tools/ClientTool"), { ssr:
 const DocTool = dynamic(() => import("@/components/tools/DocTool"), { ssr: false, loading: () => <p style={{padding:"2rem", color:"#666"}}>Loading...</p> });
 const DiagnosticTool = dynamic(() => import("@/components/tools/DiagnosticTool"), { ssr: false, loading: () => <p style={{padding:"2rem", color:"#666"}}>Loading...</p> });
 
+const TAB_BAR_HEIGHT = 70;
+
 export default function DashboardPage() {
   const [activeTool, setActiveTool] = useState<Tool>("neighborhood");
   const [isMobile, setIsMobile] = useState(false);
@@ -34,12 +36,12 @@ export default function DashboardPage() {
   };
 
   const toolList = [
-    { id: "neighborhood" as Tool, label: "Neighborhood story", icon: "📍" },
-    { id: "offer" as Tool, label: "Offer strategy", icon: "📈" },
-    { id: "photo" as Tool, label: "Photo critique", icon: "📷" },
-    { id: "client" as Tool, label: "Client matcher", icon: "🤝" },
-    { id: "docs" as Tool, label: "Doc risk scanner", icon: "🔍" },
-    { id: "diagnostic" as Tool, label: "Listing diagnostic", icon: "🩺" },
+    { id: "neighborhood" as Tool, label: "Neighborhood", icon: "📍" },
+    { id: "offer" as Tool, label: "Offer", icon: "📈" },
+    { id: "photo" as Tool, label: "Photos", icon: "📷" },
+    { id: "client" as Tool, label: "Clients", icon: "🤝" },
+    { id: "docs" as Tool, label: "Docs", icon: "🔍" },
+    { id: "diagnostic" as Tool, label: "Diagnostic", icon: "🩺" },
   ];
 
   return (
@@ -56,12 +58,11 @@ export default function DashboardPage() {
           flex: 1;
           overflow-y: auto;
           background: #f8f9fc;
-          padding-bottom: 80px;
         }
         .dashboard-inner {
           max-width: 760px;
           margin: 0 auto;
-          padding: 2.5rem 2rem;
+          padding: 2.5rem 2rem 3rem;
         }
         .mobile-top {
           background: #0a0f1e;
@@ -70,9 +71,7 @@ export default function DashboardPage() {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          position: sticky;
-          top: 0;
-          z-index: 100;
+          flex-shrink: 0;
         }
         .mobile-logo {
           font-family: 'DM Serif Display', serif;
@@ -88,14 +87,11 @@ export default function DashboardPage() {
           font-family: 'DM Sans', sans-serif;
         }
         .mobile-tabs {
-          position: fixed;
-          bottom: 0;
-          left: 0;
-          right: 0;
           background: #0a0f1e;
           border-top: 1px solid rgba(255,255,255,0.08);
           z-index: 200;
           display: flex;
+          flex-shrink: 0;
           padding-bottom: env(safe-area-inset-bottom);
         }
         .mobile-tab {
@@ -120,20 +116,31 @@ export default function DashboardPage() {
         }
         .mobile-tab.active .mobile-tab-label { color: #7eb3ff; }
         @media (max-width: 900px) {
-          .dashboard-inner { padding: 1rem; }
+          .dashboard-inner { padding: 1rem 1rem 2rem; }
         }
       `}</style>
 
       {isMobile ? (
-        /* Mobile layout */
-        <div style={{ display: "flex", flexDirection: "column", height: "100vh", background: "#f8f9fc" }}>
+        <div style={{
+          display: "flex",
+          flexDirection: "column",
+          height: "100vh",
+          background: "#f8f9fc",
+          overflow: "hidden",
+        }}>
           <div className="mobile-top">
             <a href="/" className="mobile-logo">Agent<span>IQ</span></a>
             <a href="/" className="mobile-home">← Home</a>
           </div>
-          <div style={{ flex: 1, overflowY: "auto", paddingBottom: "140px" }}>
-            <div className="dashboard-inner" style={{ paddingBottom: "60px" }}>
+          <div style={{
+            flex: 1,
+            overflowY: "auto",
+            WebkitOverflowScrolling: "touch",
+          }}>
+            <div className="dashboard-inner">
               {tools[activeTool]}
+              {/* Spacer so content clears the tab bar */}
+              <div style={{ height: `${TAB_BAR_HEIGHT + 24}px` }} />
             </div>
           </div>
           <div className="mobile-tabs">
@@ -150,11 +157,10 @@ export default function DashboardPage() {
           </div>
         </div>
       ) : (
-        /* Desktop layout */
         <div className="dashboard-shell">
           <DarkSidebar activeTool={activeTool} setActiveTool={setActiveTool} />
           <main className="dashboard-main">
-            <div className="dashboard-inner" style={{ paddingBottom: "60px" }}>
+            <div className="dashboard-inner">
               {tools[activeTool]}
             </div>
           </main>
