@@ -10,8 +10,14 @@ function parseResult(result: string): { type: "error" | "success"; text: string 
   if (result.includes("overloaded_error")) {
     return { type: "error", text: "😅 Claude is currently overloaded — please try again in a few seconds." };
   }
-  if (result.startsWith("{") || result.startsWith("4")) {
-    return { type: "error", text: "⚠️ Something went wrong — please try again." };
+  if (result.startsWith("{")) {
+    try {
+      const parsed = JSON.parse(result);
+      const msg = parsed?.error?.message || parsed?.error || "Unknown error";
+      return { type: "error", text: `⚠️ ${msg}` };
+    } catch {
+      return { type: "error", text: `⚠️ ${result.slice(0, 120)}` };
+    }
   }
   return { type: "success", text: result };
 }
@@ -47,7 +53,6 @@ function formatResult(text: string): string {
         continue;
       }
 
-      // Headers: ##, ###
       if (trimmed.startsWith("### ")) {
         if (inList) { html += "</ul>"; inList = false; }
         html += `<p class="ai-section-header">${trimmed.replace(/^###\s+/, "")}</p>`;
@@ -64,7 +69,6 @@ function formatResult(text: string): string {
         continue;
       }
 
-      // Bullet points — all treated as same level
       if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
         if (!inList) { html += "<ul>"; inList = true; }
         const content = trimmed.replace(/^[-*]\s+/, "").replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
@@ -72,7 +76,6 @@ function formatResult(text: string): string {
         continue;
       }
 
-      // Numbered list
       if (/^\d+\.\s/.test(trimmed)) {
         if (inList) { html += "</ul>"; inList = false; }
         const content = trimmed.replace(/^\d+\.\s+/, "").replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
@@ -80,7 +83,6 @@ function formatResult(text: string): string {
         continue;
       }
 
-      // Regular paragraph
       if (inList) { html += "</ul>"; inList = false; }
       const content = trimmed.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
       html += `<p>${content}</p>`;
@@ -149,10 +151,7 @@ export default function ResultBox({
                 padding-left: 1.25rem;
                 margin-bottom: 0.6rem;
               }
-              .ai-prose ul ul {
-                padding-left: 0;
-                list-style: disc;
-              }
+              .ai-prose ul ul { padding-left: 0; list-style: disc; }
               .ai-prose li { margin-bottom: 0.2rem; line-height: 1.5; }
               .ai-section-header {
                 font-weight: 600;
