@@ -6,12 +6,12 @@ import dynamic from "next/dynamic";
 
 export type { Tool } from "@/types/tools";
 
-const NeighborhoodTool = dynamic(() => import("@/components/tools/NeighborhoodTool"), { ssr: false });
-const OfferTool = dynamic(() => import("@/components/tools/OfferTool"), { ssr: false });
-const PhotoTool = dynamic(() => import("@/components/tools/PhotoTool"), { ssr: false });
-const ClientTool = dynamic(() => import("@/components/tools/ClientTool"), { ssr: false });
-const DocTool = dynamic(() => import("@/components/tools/DocTool"), { ssr: false });
-const DiagnosticTool = dynamic(() => import("@/components/tools/DiagnosticTool"), { ssr: false });
+const NeighborhoodTool = dynamic(() => import("@/components/tools/NeighborhoodTool"), { ssr: false, loading: () => <p style={{padding:"2rem", color:"#666"}}>Loading...</p> });
+const OfferTool = dynamic(() => import("@/components/tools/OfferTool"), { ssr: false, loading: () => <p style={{padding:"2rem", color:"#666"}}>Loading...</p> });
+const PhotoTool = dynamic(() => import("@/components/tools/PhotoTool"), { ssr: false, loading: () => <p style={{padding:"2rem", color:"#666"}}>Loading...</p> });
+const ClientTool = dynamic(() => import("@/components/tools/ClientTool"), { ssr: false, loading: () => <p style={{padding:"2rem", color:"#666"}}>Loading...</p> });
+const DocTool = dynamic(() => import("@/components/tools/DocTool"), { ssr: false, loading: () => <p style={{padding:"2rem", color:"#666"}}>Loading...</p> });
+const DiagnosticTool = dynamic(() => import("@/components/tools/DiagnosticTool"), { ssr: false, loading: () => <p style={{padding:"2rem", color:"#666"}}>Loading...</p> });
 
 export default function DashboardPage() {
   const [activeTool, setActiveTool] = useState<Tool>("neighborhood");
