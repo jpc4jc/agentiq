@@ -135,15 +135,16 @@ export default function DashboardPage() {
             <a href="/" className="mobile-logo">Agent<span>IQ</span></a>
             <a href="/" className="mobile-home">← Home</a>
           </div>
-          <div style={{
-            flex: 1,
-            overflowY: "auto",
-            WebkitOverflowScrolling: "touch" as React.CSSProperties["WebkitOverflowScrolling"],
-          }}>
-            <div className="dashboard-inner">
-              {tools[activeTool]}
-            </div>
-          </div>
+<div style={{
+  flex: 1,
+  overflowY: "auto",
+  WebkitOverflowScrolling: "touch" as React.CSSProperties["WebkitOverflowScrolling"],
+}}>
+  <div style={{ padding: "1rem 1rem 0" }}>
+    {tools[activeTool]}
+  </div>
+  <div style={{ height: "120px" }} />
+</div>
           <div className="mobile-tabs">
             {toolList.map((tool) => (
               <button
