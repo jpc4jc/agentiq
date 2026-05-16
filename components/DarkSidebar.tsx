@@ -188,10 +188,10 @@ export default function DarkSidebar({
           font-family: 'DM Sans', sans-serif;
         }
 
-        @media (max-width: 768px) {
-          .dark-sidebar { display: none; }
-          .mobile-tab-bar { display: block; }
-          .mobile-header { display: flex; }
+        @media (max-width: 900px) {
+          .dark-sidebar { display: none !important; }
+          .mobile-tab-bar { display: block !important; }
+          .mobile-header { display: flex !important; }
         }
       `}</style>
 
