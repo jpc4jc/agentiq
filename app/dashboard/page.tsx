@@ -131,8 +131,8 @@ export default function DashboardPage() {
             <a href="/" className="mobile-logo">Agent<span>IQ</span></a>
             <a href="/" className="mobile-home">← Home</a>
           </div>
-          <div style={{ flex: 1, overflowY: "auto", paddingBottom: "80px" }}>
-            <div className="dashboard-inner">
+          <div style={{ flex: 1, overflowY: "auto", paddingBottom: "140px" }}>
+            <div className="dashboard-inner" style={{ paddingBottom: "60px" }}>
               {tools[activeTool]}
             </div>
           </div>
@@ -154,7 +154,7 @@ export default function DashboardPage() {
         <div className="dashboard-shell">
           <DarkSidebar activeTool={activeTool} setActiveTool={setActiveTool} />
           <main className="dashboard-main">
-            <div className="dashboard-inner">
+            <div className="dashboard-inner" style={{ paddingBottom: "60px" }}>
               {tools[activeTool]}
             </div>
           </main>
