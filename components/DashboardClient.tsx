@@ -7,7 +7,7 @@ import PhotoTool from "@/components/tools/PhotoTool";
 import ClientTool from "@/components/tools/ClientTool";
 import DocTool from "@/components/tools/DocTool";
 import DiagnosticTool from "@/components/tools/DiagnosticTool";
-import { Tool } from "@/app/dashboard/page";
+import { Tool } from "@/types/tools";
 
 export default function DashboardClient() {
   const [activeTool, setActiveTool] = useState<Tool>("neighborhood");
