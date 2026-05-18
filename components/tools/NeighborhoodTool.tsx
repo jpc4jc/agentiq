@@ -23,8 +23,8 @@ export default function NeighborhoodTool() {
     if (!address) return;
     setLoading(true);
     setResult("");
-    const prompt = `Search the web to verify the exact city, zip code, and county for ${address}. Do NOT guess or assume a neighborhood name — only mention a neighborhood name if you find it explicitly confirmed in search results for that specific address. Then write 2 punchy MLS-ready paragraphs targeting ${selectedPersonas.join(", ")} buyers with a ${tone} tone. Include verified commute times, community character, and confirmed local events or amenities. Do NOT mention school rankings, ratings, or scores. Do NOT mention walking distance to anything. Search the school district boundaries to find the specific public elementary, intermediate, middle, and high school names that serve ${address} and include them by name only. End with 5 data tags formatted as "📍 Label: Value" — include Location, School District name, commute info, community character, and "📍 Schools: [list school names]".`;
-    
+    const prompt = `Search the web for the address ${address} to find: (1) the exact verified city, zip code, and county — do not guess or use nearby neighborhood names, only use the neighborhood name if it is explicitly confirmed for this exact address in search results; (2) any active or recent MLS listing data such as beds, baths, square footage, price, and property type — only include details confirmed in search results; (3) the specific public elementary, intermediate, middle, and high school names serving this address based on school district boundaries — names only, no rankings or ratings; (4) verified commute times to nearby employment centers. Then write 2 punchy MLS-ready paragraphs targeting ${selectedPersonas.join(", ")} buyers with a ${tone} tone. Naturally weave in any confirmed property details (beds, baths, sq ft) if found. Include community character and confirmed local amenities or events. Do NOT mention school rankings or ratings. Do NOT mention walking distance to anything. End with 5 data tags formatted as "📍 Label: Value" covering location, schools, commute, property type, and school district.`;
+
     const res = await fetch("/api/ai", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -47,7 +47,7 @@ export default function NeighborhoodTool() {
           </label>
           <input
             className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="e.g. Grant Park, Atlanta GA 30312"
+            placeholder="e.g. 23 Allison Way, Abingdon MD 21009"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
           />
