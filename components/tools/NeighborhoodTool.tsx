@@ -23,8 +23,8 @@ export default function NeighborhoodTool() {
     if (!address) return;
     setLoading(true);
     setResult("");
-    const prompt = `Search the web to verify what city and neighborhood ${address} is in. Then write 2 punchy MLS-ready paragraphs targeting ${selectedPersonas.join(", ")} buyers with a ${tone} tone. Include verified commute times, community character, and confirmed local events or amenities. Do NOT mention school rankings, ratings, or scores under any circumstances. Do NOT mention walking distance to anything. Search the school district boundaries to find the specific public elementary, intermediate, middle, and high school names that serve ${address} and include them by name only. End with 5 data tags formatted as "📍 Label: Value" — include Location, School District name, commute info, community character, and "📍 Schools: [list school names]".`;
-
+    const prompt = `Search the web to verify the exact city, zip code, and county for ${address}. Do NOT guess or assume a neighborhood name — only mention a neighborhood name if you find it explicitly confirmed in search results for that specific address. Then write 2 punchy MLS-ready paragraphs targeting ${selectedPersonas.join(", ")} buyers with a ${tone} tone. Include verified commute times, community character, and confirmed local events or amenities. Do NOT mention school rankings, ratings, or scores. Do NOT mention walking distance to anything. Search the school district boundaries to find the specific public elementary, intermediate, middle, and high school names that serve ${address} and include them by name only. End with 5 data tags formatted as "📍 Label: Value" — include Location, School District name, commute info, community character, and "📍 Schools: [list school names]".`;
+    
     const res = await fetch("/api/ai", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
